@@ -2,19 +2,12 @@
 Perl Penetration
 
 # Requirements
-> Test on Ubuntu 18.04
-- install Perl modules with ```cpan```
+> Test on Linux.
+- Install <a href="https://www.cpan.org/modules/INSTALL.html">cpanm</a> to make installing Perl modules easier
 ```console
-$ sudo cpan
+$ sudo cpan App::cpanminus
 ```
+- Now install any module you can <a href="https://www.cpan.org/modules/index.html">find</a>. 
 ```console
-cpan[1]> install Net::DNS
-```
-- >Once the module is installed, type '```exit```' to return back to your shell.
-
-<br/>
-
-**You can also directly install the module from the Terminal using command:**
-```console
-$ sudo cpan Net::DNS
+$ sudo cpanm Module::Name
 ```
