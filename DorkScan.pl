@@ -7,8 +7,10 @@ use LWP::Simple;
 use URI;
 
 if( @ARGV < 1 ) {
- print "./DorkScan.pl YourDork <outfile>\n";
- exit;
+  print "Usage e.g: ";
+  print "./DorkScan.pl YourDork <outfile> \n";
+  print "perl DorkScan.pl YourDork <outfile> \n";
+  exit;
 }
 
 my ($dork, $out) = @ARGV;
